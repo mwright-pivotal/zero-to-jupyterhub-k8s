@@ -20,6 +20,7 @@ RUN apt-get update && \
       sqlite3 \
       curl \
       dnsutils \
+      libpq-dev \
       $(bash -c 'if [[ $JUPYTERHUB_VERSION == "git"* ]]; then \
         # workaround for https://bugs.launchpad.net/ubuntu/+source/nodejs/+bug/1794589
         echo nodejs=8.10.0~dfsg-2ubuntu0.2 nodejs-dev=8.10.0~dfsg-2ubuntu0.2 npm; \
@@ -54,6 +55,12 @@ WORKDIR /srv/jupyterhub
 
 # So we can actually write a db file here
 RUN chown ${NB_USER}:${NB_USER} /srv/jupyterhub
+RUN pip install pathlib
+COPY rts4madlib /usr/local/bin/
+RUN pip install psycopg2-binary
+RUN pip install pandas
+RUN pip install enlighten
+RUN pip install ipython-sql
 
 # JupyterHub API port
 EXPOSE 8081
